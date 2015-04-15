@@ -32,7 +32,7 @@ describe Api::V1::RegistrationsController do
 
       it "renders an errors json" do
         user_response = json_response
-        expect(user_response).to have_key(:success)
+        expect(user_response[:success]).to be_false
       end
 
       it "renders the json errors on whye the user could not be created" do
