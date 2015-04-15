@@ -30,7 +30,7 @@ group :doc do
 end
 
 group :development, :test do
-  gem 'sqlite3'
+  gem 'mysql2'
   gem "factory_girl_rails"
   gem 'ffaker'
 end
