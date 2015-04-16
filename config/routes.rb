@@ -8,9 +8,11 @@ MarketPlaceApi::Application.routes.draw do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
       # We are going to list our resources here
 resources :users, :only => [:index, :show, :create, :update, :destroy] do
+  
 
 end
   resources :sessions, :only => [:create, :destroy]
+  resources :people, :only => [:show]
 
   devise_scope :user do
       post 'registrations' => 'registrations#create', :as => 'register'
