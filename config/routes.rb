@@ -12,7 +12,7 @@ resources :users, :only => [:index, :show, :create, :update, :destroy] do
 
 end
   resources :sessions, :only => [:create, :destroy]
-  resources :people, :only => [:show]
+  resources :people, :only => [:show, :index, :create, :update, :destroy]
 
   devise_scope :user do
       post 'registrations' => 'registrations#create', :as => 'register'
