@@ -1,11 +1,15 @@
 class Api::V1::PeopleController < ApplicationController
-   before_action :authenticate_with_token!, only: [:create, :update, :destroy]
+   before_action :authenticate_with_token!, only: [:create, :update, :destroy, :add_role]
     respond_to :json
 
   def show
     respond_with Person.find(params[:id])
   end
-    def index
+  def show_roles
+    person = Person.find(params[:id])
+    respond_with person.roles
+  end
+  def index
     respond_with Person.all  
   end
     def create
@@ -17,10 +21,21 @@ class Api::V1::PeopleController < ApplicationController
     end
   end
   
+  def add_role
+    person = Person.find(params[:id])
+    role = Role.find(params[:role_id])
+    if person.roles << role
+      render json: person.roles, status: 203, location: [:api, person]
+    else
+      render json: { errors: person.roles.errors }, status: 422
+    end
+  end
+  
+  
   def update
     person = Person.find(params[:id])
     if person.update(person_params)
-      render json: person, status: 200, location: [:api, person]
+      render json: person, status: 202, location: [:api, person]
     else
       render json: { errors: person.errors }, status: 422
     end
@@ -31,10 +46,20 @@ class Api::V1::PeopleController < ApplicationController
     person.destroy
     head 204
   end
+    def remove_role
+    person = Person.find(params[:id])
+    role = Role.find(params[:role_id])
+    if person.roles.destroy(role)
+      render json: person.roles, status: 203, location: [:api, person]
+    else
+      render json: { errors: person.roles.errors }, status: 422
+    end
+  end
+  
 
   private
 
     def person_params
-      params.require(:person).permit(:firstname, :lastname)
+      params.require(:person).permit(:firstname, :lastname, :role_id, :role_ids => [])
     end
 end

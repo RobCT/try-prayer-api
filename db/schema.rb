@@ -11,13 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150416063852) do
+ActiveRecord::Schema.define(version: 20150416174931) do
 
   create_table "people", force: :cascade do |t|
     t.string   "firstname",  limit: 255
     t.string   "lastname",   limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+  end
+
+  create_table "people_roles", id: false, force: :cascade do |t|
+    t.integer  "person_id",  limit: 4
+    t.integer  "role_id",    limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "people_roles", ["person_id"], name: "index_people_roles_on_person_id", using: :btree
+  add_index "people_roles", ["role_id"], name: "index_people_roles_on_role_id", using: :btree
+
+  create_table "roles", force: :cascade do |t|
+    t.string   "description", limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -40,4 +56,6 @@ ActiveRecord::Schema.define(version: 20150416063852) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "people_roles", "people"
+  add_foreign_key "people_roles", "roles"
 end

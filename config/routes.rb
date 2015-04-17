@@ -12,7 +12,15 @@ resources :users, :only => [:index, :show, :create, :update, :destroy] do
 
 end
   resources :sessions, :only => [:create, :destroy]
-  resources :people, :only => [:show, :index, :create, :update, :destroy]
+  resources :people, :only => [:show, :index, :create, :update, :destroy] do
+    member do
+      post 'roles', :to => 'people#add_role', :as => :add_role_to
+      get 'roles', :to => 'people#show_roles', :as => :show_roles_for
+      delete 'roles', :to => 'people#remove_role', :as => :remove_role_from
+    end
+  end
+  resources :roles, :only => [:show, :index, :create, :update, :destroy]
+  
 
   devise_scope :user do
       post 'registrations' => 'registrations#create', :as => 'register'
