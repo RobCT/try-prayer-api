@@ -20,7 +20,12 @@ end
     end
   end
   resources :roles, :only => [:show, :index, :create, :update, :destroy]
+  resources :events, :only => [:show, :index, :create, :update, :destroy] 
+    resource :event, :only => [] do
+      post 'calendar', :to => 'events#calendar', :as => :render_calendar
+    end
   
+  #resources :calendar, :only => [:create]
 
   devise_scope :user do
       post 'registrations' => 'registrations#create', :as => 'register'
