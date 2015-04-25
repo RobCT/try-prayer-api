@@ -1,10 +1,9 @@
 FactoryGirl.define do
   factory :event do
-    title "MyString"
-start_date "2015-04-18"
-end_date "2015-04-18"
-created_by "MyText"
-last_modified_by "MyText"
+    title { FFaker::Conference.name }
+    eventdate { FFaker::Time.date }
+    eventstart "2000-01-01T10:00:00.000Z"
+    eventend "2000-01-01T11:30:00.000Z"
   end
 
 end
