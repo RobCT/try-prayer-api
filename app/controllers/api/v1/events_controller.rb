@@ -6,12 +6,12 @@ class Api::V1::EventsController < ApplicationController
     respond_with Event.find(params[:id])
   end
     def index
-    respond_with Event.all  
+    respond_with Event.search(params) 
   end
     def create
     event = Event.new(event_params)
     if event.save
-      render json: event, status: 201, location: [:api, role]
+      render json: event, status: 201, location: [:api, event]
     else
       render json: { errors: event.errors }, status: 422
     end
@@ -24,7 +24,7 @@ class Api::V1::EventsController < ApplicationController
   def update
     event = Event.find(params[:id])
     if event.update(event_params)
-      render json: event, status: 202, location: [:api, role]
+      render json: event, status: 202, location: [:api, event]
     else
       render json: { errors: event.errors }, status: 422
     end
@@ -39,6 +39,6 @@ class Api::V1::EventsController < ApplicationController
   private
 
     def event_params
-      params.require(:events).permit(:title, :date, :start, :end, :created_by, :last_modified_by, :year, :month, :day, :type)
+      params.require(:events).permit(:title, :eventdate, :eventstart, :eventend, :created_by, :last_modified_by, :year, :month, :day, :type)
     end
 end
