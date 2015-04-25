@@ -34,6 +34,7 @@ class Api::V1::EventsController < ApplicationController
     event = Event.find(params[:id])
     event.destroy
     head 204
+    
   end
 
   private
