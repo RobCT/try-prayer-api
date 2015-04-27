@@ -11,6 +11,7 @@ describe Event do
     it { should validate_presence_of :eventstart }
     it { should validate_presence_of :eventend }
     it { should validate_presence_of :title }
+    it { should have_many :volunteersheets }
     describe ' filter by date range ' do
       before(:each) do
         @event1 = FactoryGirl.create :event, eventdate: '2015-03-02' 

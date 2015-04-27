@@ -20,7 +20,12 @@ end
     end
   end
   resources :roles, :only => [:show, :index, :create, :update, :destroy]
-  resources :events, :only => [:show, :index, :create, :update, :destroy] 
+  resources :volunteersheets, :only => [:show, :index, :create, :update, :destroy] 
+  resources :events, :only => [:show, :index, :create, :update, :destroy] do
+    member do
+      post 'volunteersheet', :to => 'events#volunteersheet', :as => :create_volunteersheet_for
+    end
+  end
     resource :event, :only => [] do
       post 'calendar', :to => 'events#calendar', :as => :render_calendar
     end

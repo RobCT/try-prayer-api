@@ -9,6 +9,8 @@ module Calendar
         start_date = @date - @date.wday
         end_date = @date.end_of_month + 6 - @date.end_of_month.wday
         (start_date..end_date).each do |dd|
+
+          
           calendar << {"date"=>dd.to_time(:utc).to_formatted_s(:rfc822), "day_of_week"=>dd.to_formatted_s(:day_of_week),"events"=>Event.filter_by_single_date(dd)}
         end 
         render json: calendar.to_json, status: 200 
@@ -16,11 +18,15 @@ module Calendar
         start_date = @date - @date.wday
         end_date = @date.end_of_week + 6 - @date.end_of_week.wday
         (start_date..end_date).each do |dd|
-          calendar << {"date"=>dd.to_time(:utc).to_formatted_s(:rfc822), "day_of_week"=>dd.to_formatted_s(:day_of_week),"events"=>Event.filter_by_single_date(dd)}
+          calendar << {"date"=>dd.to_time(:utc).to_formatted_s(:rfc822), "day_of_week"=>dd.to_formatted_s(:day_of_week),"events"=>Event.filter_by_single_date(dd).order(:eventstart)}
         end
         render json: calendar.to_json, status: 200 
       when "day"
-        calendar << {"date"=>@date.to_time(:utc).to_formatted_s(:rfc822), "day_of_week"=>@date.to_formatted_s(:day_of_week),"events"=>Event.filter_by_single_date(@date)}
+          combined = Array.new
+          Event.filter_by_single_date(@date).order(:eventstart).each do |event|
+            combined << event.attributes.merge({"volunteersheets" =>  event.volunteersheets})
+          end
+        calendar << {"date"=>@date.to_time(:utc).to_formatted_s(:rfc822), "day_of_week"=>@date.to_formatted_s(:day_of_week),"events"=>combined}
         render json: calendar.to_json, status: 200  
       end
   end

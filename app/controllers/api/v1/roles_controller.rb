@@ -6,7 +6,7 @@ class Api::V1::RolesController < ApplicationController
     respond_with Role.find(params[:id])
   end
     def index
-    respond_with Role.all  
+    respond_with Role.all.order(:description)  
   end
     def create
     role = Role.new(role_params)

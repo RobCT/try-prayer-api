@@ -1,6 +1,7 @@
 class Event < ActiveRecord::Base
   validates :title, :eventdate, :eventstart, :eventend, presence: true
   validates_with EventendGreaterthanEventstartValidator
+  has_many :volunteersheets, dependent: :destroy
       scope :filter_by_date, lambda { |from,to|
     where("eventdate >= ? and eventdate <= ?", from, to ) 
   }

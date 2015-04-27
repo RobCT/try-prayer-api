@@ -7,10 +7,10 @@ class Api::V1::PeopleController < ApplicationController
   end
   def show_roles
     person = Person.find(params[:id])
-    respond_with person.roles
+    respond_with person.roles.order(:description) 
   end
   def index
-    respond_with Person.all  
+    respond_with Person.all.order(:lastname)  
   end
     def create
     person = Person.new(person_params)
