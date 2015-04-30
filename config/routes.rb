@@ -21,6 +21,7 @@ end
   end
   resources :roles, :only => [:show, :index, :create, :update, :destroy]
   resources :volunteersheets, :only => [:show, :index, :create, :update, :destroy] 
+  resources :templates, :only => [:show, :index, :create, :update, :destroy]
   resources :events, :only => [:show, :index, :create, :update, :destroy] do
     member do
       post 'volunteersheet', :to => 'events#volunteersheet', :as => :create_volunteersheet_for
@@ -29,6 +30,9 @@ end
     resource :event, :only => [] do
       post 'calendar', :to => 'events#calendar', :as => :render_calendar
     end
+    resource :template, :only => [] do
+      post 'clone_template', :to => 'templates#clone_to_event', :as => :clone_template_to
+    end    
   
   #resources :calendar, :only => [:create]
 

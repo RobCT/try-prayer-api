@@ -36,6 +36,6 @@ class Api::V1::VolunteersheetsController < ApplicationController
   private
 
     def volunteersheet_params
-      params.require(:volunteersheet).permit(:about, :rowindex, :role_id, :person_id, :event_id)
+      params.require(:volunteersheet).permit(:about, :rowindex, :role_id, :person_id, :event_id, :template_id)
     end
 end

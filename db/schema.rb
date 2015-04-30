@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150426063342) do
+ActiveRecord::Schema.define(version: 20150428160858) do
 
   create_table "events", force: :cascade do |t|
     t.text     "title",            limit: 65535
@@ -47,6 +47,12 @@ ActiveRecord::Schema.define(version: 20150426063342) do
     t.datetime "updated_at",              null: false
   end
 
+  create_table "templates", force: :cascade do |t|
+    t.string   "title",      limit: 255, default: "", null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "", null: false
     t.string   "encrypted_password",     limit: 255, default: "", null: false
@@ -68,22 +74,25 @@ ActiveRecord::Schema.define(version: 20150426063342) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "volunteersheets", force: :cascade do |t|
-    t.string   "about",      limit: 255, default: ""
-    t.integer  "rowindex",   limit: 4,   default: 1,  null: false
-    t.integer  "role_id",    limit: 4
-    t.integer  "person_id",  limit: 4
-    t.integer  "event_id",   limit: 4
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.string   "about",       limit: 255, default: ""
+    t.integer  "rowindex",    limit: 4,   default: 1,  null: false
+    t.integer  "role_id",     limit: 4
+    t.integer  "person_id",   limit: 4
+    t.integer  "event_id",    limit: 4
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.integer  "template_id", limit: 4
   end
 
   add_index "volunteersheets", ["event_id"], name: "index_volunteersheets_on_event_id", using: :btree
   add_index "volunteersheets", ["person_id"], name: "index_volunteersheets_on_person_id", using: :btree
   add_index "volunteersheets", ["role_id"], name: "index_volunteersheets_on_role_id", using: :btree
+  add_index "volunteersheets", ["template_id"], name: "index_volunteersheets_on_template_id", using: :btree
 
   add_foreign_key "people_roles", "people"
   add_foreign_key "people_roles", "roles"
   add_foreign_key "volunteersheets", "events"
   add_foreign_key "volunteersheets", "people"
   add_foreign_key "volunteersheets", "roles"
+  add_foreign_key "volunteersheets", "templates"
 end
