@@ -3,7 +3,12 @@ class Api::V1::SessionsController < ApplicationController
   def create
     user_password = params[:session][:password]
     user_email = params[:session][:email]
-    user = user_email.present? && User.find_by(email: user_email)
+    user_username = params[:session][:username]
+    if user_username.present?
+      user = User.find_by(username: user_username)
+    else
+       user = user_email.present? && User.find_by(email: user_email)
+    end
 
     if user.valid_password? user_password
       sign_in user, store: false

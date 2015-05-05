@@ -11,18 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150428160858) do
+ActiveRecord::Schema.define(version: 20150505111126) do
 
   create_table "events", force: :cascade do |t|
-    t.text     "title",            limit: 65535
+    t.text     "title",      limit: 65535
     t.date     "eventdate"
     t.time     "eventstart"
     t.time     "eventend"
-    t.text     "created_by",       limit: 65535
-    t.text     "last_modified_by", limit: 65535
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.integer  "user_id",    limit: 4
+    t.boolean  "is_private", limit: 1,     default: false
   end
+
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "people", force: :cascade do |t|
     t.string   "firstname",  limit: 255
@@ -67,6 +69,7 @@ ActiveRecord::Schema.define(version: 20150428160858) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "auth_token",             limit: 255, default: ""
+    t.string   "username",               limit: 255
   end
 
   add_index "users", ["auth_token"], name: "index_users_on_auth_token", unique: true, using: :btree
@@ -89,6 +92,7 @@ ActiveRecord::Schema.define(version: 20150428160858) do
   add_index "volunteersheets", ["role_id"], name: "index_volunteersheets_on_role_id", using: :btree
   add_index "volunteersheets", ["template_id"], name: "index_volunteersheets_on_template_id", using: :btree
 
+  add_foreign_key "events", "users"
   add_foreign_key "people_roles", "people"
   add_foreign_key "people_roles", "roles"
   add_foreign_key "volunteersheets", "events"
