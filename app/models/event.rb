@@ -3,6 +3,7 @@ class Event < ActiveRecord::Base
   validates_with EventendGreaterthanEventstartValidator
   has_many :volunteersheets, dependent: :destroy
   belongs_to :user
+  
       scope :filter_by_date, lambda { |from,to|
     where("eventdate >= ? and eventdate <= ?", from, to ) 
   }
@@ -19,8 +20,11 @@ class Event < ActiveRecord::Base
     where("is_private = true and id = ?" , iD ) 
   }
           scope :filter_my_events, lambda { |iD|
-    where("is_private = true and id = ?" , iD ) 
+    where("(is_private = true and id = ?) and (is_private = false)" , iD ) 
   }
+          scope :filter_my_events_by_single_date, lambda { |iD, event_date|
+    where("(is_private = true and id = ? and eventdate = ? ) or (is_private = false and eventdate = ?)" , iD, event_date, event_date ) 
+  }  
 
     def self.search(params = {})
     events =  Event.all
