@@ -7,16 +7,19 @@ class Event < ActiveRecord::Base
     where("eventdate >= ? and eventdate <= ?", from, to ) 
   }
         scope :filter_by_single_date, lambda { |event_date|
-    where("eventdate = ?" , event_date ) 
+    where("is_private = false and eventdate = ?" , event_date ) 
   }
-          scope :filter_by_single_id, lambda { |iD|
-    where("id = ?" , iD ) 
+        scope :filter_private_by_single_date, lambda { |event_date|
+    where("is_private = true and eventdate = ?" , event_date ) 
   }
-            scope :filter_my_private_events, lambda { |id|
-    where("user_id = ? and is_private = true" , id) 
+      scope :filter_by_single_id, lambda { |iD|
+    where("is_private = false and id = ?" , iD ) 
   }
-            scope :filter_by_public_events, lambda { |pub|
-    where("is_private = ?"  , pub) 
+          scope :filter_private_by_single_id, lambda { |iD|
+    where("is_private = true and id = ?" , iD ) 
+  }
+          scope :filter_my_events, lambda { |iD|
+    where("is_private = true and id = ?" , iD ) 
   }
 
     def self.search(params = {})
@@ -25,6 +28,9 @@ class Event < ActiveRecord::Base
     events = events.filter_by_date(params[:date_from], params[:date_to]) if (params.has_key?(:date_from) & params.has_key?(:date_to))
     events = events.filter_by_single_date(params[:event_date]) if params[:event_date]
     events = events.filter_by_single_id(params[:event_id]) if params[:event_id]
+   # events = events.filter_private_by_single_id(params[:event_id]) if params[:event_id]
+   # events = events.filter_private_by_single_date(params[:event_date]) if params[:event_date]
+    #events = events.filter_my_events(current_user.id)
     events
   end
 end

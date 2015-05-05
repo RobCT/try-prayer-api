@@ -62,7 +62,7 @@ class Api::V1::EventsController < ApplicationController
   private
 
     def event_params
-      params.require(:event).permit(:title, :eventdate, :eventstart, :eventend, :created_by, :last_modified_by)
+      params.require(:event).permit(:title, :eventdate, :eventstart, :eventend, :user_id, :is_private)
     end
     def volunteersheet_params
       params.require(:event).permit(:about, :rowindex, :role_id, :person_id, :event_id)
