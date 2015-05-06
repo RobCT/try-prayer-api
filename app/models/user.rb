@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
   validates :auth_token, uniqueness: true 
   validates :username, uniqueness: true
-  has_one :person
-  has_many :events
+
+  has_many :prayers
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,

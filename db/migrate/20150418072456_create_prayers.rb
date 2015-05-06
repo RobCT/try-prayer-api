@@ -1,14 +1,11 @@
-class CreateEvents < ActiveRecord::Migration
+class CreatePrayers < ActiveRecord::Migration
 
   def change
-    create_table :events do |t|
+    create_table :prayers do |t|
       t.text :title, defaults: ""
-      t.date :date, defaults: Date.today
-      t.time :start, defaults: Time.new("00:00") 
-      t.time :end, defaults: Time.new("00:00")  
-      t.text :created_by, defaults: ""
-      t.text :last_modified_by, defaults: ""
-
+      t.date :prayerdate, defaults: Date.today
+      t.text :prayer, defaults: ""
+      t.belongs_to :user, index: true, foreign_key: true
       t.timestamps null: false
       
     end

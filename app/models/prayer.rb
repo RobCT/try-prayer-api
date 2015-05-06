@@ -1,40 +1,28 @@
-class Event < ActiveRecord::Base
-  validates :title, :eventdate, :eventstart, :eventend, presence: true
-  validates_with EventendGreaterthanEventstartValidator
+class Prayer < ActiveRecord::Base
+  validates :title, :prayerdate, :prayer,  presence: true
+
   has_many :volunteersheets, dependent: :destroy
   belongs_to :user
   
       scope :filter_by_date, lambda { |from,to|
-    where("eventdate >= ? and eventdate <= ?", from, to ) 
+    where("prayerdate >= ? and prayerdate <= ?", from, to ) 
   }
-        scope :filter_by_single_date, lambda { |event_date|
-    where("is_private = false and eventdate = ?" , event_date ) 
+        scope :filter_by_single_date, lambda { |prayer_date|
+    where("prayerdate = ?" , prayer_date ) 
   }
-        scope :filter_private_by_single_date, lambda { |event_date|
-    where("is_private = true and eventdate = ?" , event_date ) 
-  }
+
       scope :filter_by_single_id, lambda { |iD|
-    where("is_private = false and id = ?" , iD ) 
+    where(" id = ?" , iD ) 
   }
-          scope :filter_private_by_single_id, lambda { |iD|
-    where("is_private = true and id = ?" , iD ) 
-  }
-          scope :filter_my_events, lambda { |iD|
-    where("(is_private = true and id = ?) and (is_private = false)" , iD ) 
-  }
-          scope :filter_my_events_by_single_date, lambda { |iD, event_date|
-    where("(is_private = true and id = ? and eventdate = ? ) or (is_private = false and eventdate = ?)" , iD, event_date, event_date ) 
-  }  
+ 
 
     def self.search(params = {})
-    events =  Event.all
+    prayers =  Prayer.all
 
-    events = events.filter_by_date(params[:date_from], params[:date_to]) if (params.has_key?(:date_from) & params.has_key?(:date_to))
-    events = events.filter_by_single_date(params[:event_date]) if params[:event_date]
-    events = events.filter_by_single_id(params[:event_id]) if params[:event_id]
-   # events = events.filter_private_by_single_id(params[:event_id]) if params[:event_id]
-   # events = events.filter_private_by_single_date(params[:event_date]) if params[:event_date]
-    #events = events.filter_my_events(current_user.id)
-    events
+    prayers = prayers.filter_by_date(params[:date_from], params[:date_to]) if (params.has_key?(:date_from) & params.has_key?(:date_to))
+    prayers = prayers.filter_by_single_date(params[:prayer_date]) if params[:prayer_date]
+    prayers = prayers.filter_by_single_id(params[:prayer_id]) if params[:prayer_id]
+
+    prayers
   end
 end
