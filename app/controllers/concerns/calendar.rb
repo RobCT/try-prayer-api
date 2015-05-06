@@ -25,7 +25,7 @@ module Calendar
         render json: calendar.to_json, status: 200 
       when "day"
 
-        calendar << {"date"=>@date.to_time(:utc).to_formatted_s(:rfc822), "day_of_week"=>@date.to_formatted_s(:day_of_week),"prayers"=>Prayer.filter_by_single_date(dd)}
+        calendar << {"date"=>@date.to_time(:utc).to_formatted_s(:rfc822), "day_of_week"=>@date.to_formatted_s(:day_of_week),"prayers"=>Prayer.filter_by_single_date(@date)}
         render json: calendar.to_json, status: 200  
       end
   end

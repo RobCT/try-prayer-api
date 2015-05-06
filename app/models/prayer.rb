@@ -1,7 +1,6 @@
 class Prayer < ActiveRecord::Base
-  validates :title, :prayerdate, :prayer,  presence: true
+  validates  :prayerdate, :prayer,  presence: true
 
-  has_many :volunteersheets, dependent: :destroy
   belongs_to :user
   
       scope :filter_by_date, lambda { |from,to|
