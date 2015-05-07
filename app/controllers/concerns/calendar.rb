@@ -24,8 +24,12 @@ module Calendar
         end
         render json: calendar.to_json, status: 200 
       when "day"
+        prayers = Array.new
+        Prayer.filter_by_single_date(@date).each do |prayer|
+        prayers <<  prayer.attributes.merge({"user" => User.find(prayer.user_id)} )
+        end
 
-        calendar << {"date"=>@date.to_time(:utc).to_formatted_s(:rfc822), "day_of_week"=>@date.to_formatted_s(:day_of_week),"prayers"=>Prayer.filter_by_single_date(@date)}
+        calendar << {"date"=>@date.to_time(:utc).to_formatted_s(:rfc822), "day_of_week"=>@date.to_formatted_s(:day_of_week),"prayers"=>prayers}
         render json: calendar.to_json, status: 200  
       end
   end

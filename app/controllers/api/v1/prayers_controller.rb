@@ -1,5 +1,5 @@
 class Api::V1::PrayersController < ApplicationController
-     before_action :authenticate_with_token!, only: [:create, :update, :destroy, :volunteersheet]
+     before_action :authenticate_with_token!, only: [:index, :show, :calendar, :create, :update, :destroy, :volunteersheet]
     respond_to :json
 
   def show
