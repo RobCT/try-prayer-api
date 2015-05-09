@@ -1,16 +1,18 @@
 require 'spec_helper'
 
-describe Api::V1::prayersController do
+describe Api::V1::PrayersController do
   describe "GET #show" do
     before(:each) do
-      
       @prayer = FactoryGirl.create :prayer
+      user = FactoryGirl.create :user
+      api_authorization_header user.auth_token
+      
       get :show, id: @prayer.id
     end
 
     it "returns the information about a reporter on a hash" do
       prayer_response = json_response
-      expect(prayer_response[:title]).to eql @prayer.title
+      expect(prayer_response[:prayer]).to eql @prayer.prayer
     end
     
 
@@ -19,6 +21,8 @@ describe Api::V1::prayersController do
   end
     describe "GET #index" do
     before(:each) do
+      user = FactoryGirl.create :user
+      api_authorization_header user.auth_token
       4.times { FactoryGirl.create :prayer }
       get :index
     end
@@ -50,7 +54,7 @@ describe Api::V1::prayersController do
     context "when is not created" do
       before(:each) do
         user = FactoryGirl.create :user
-        @invalid_prayer_attributes = { title: "" }
+        @invalid_prayer_attributes = { prayer: "" }
         api_authorization_header user.auth_token
         post :create, { prayer: @invalid_prayer_attributes }
       end
@@ -62,7 +66,7 @@ describe Api::V1::prayersController do
 
       it "renders the json errors on why the user could not be created" do
         prayer_response = json_response
-        expect(prayer_response[:errors][:title]).to include "can't be blank"
+        expect(prayer_response[:errors][:prayer]).to include "can't be blank"
       end
 
       it { should respond_with 422 }
@@ -93,7 +97,7 @@ describe Api::V1::prayersController do
     context "when is not updated" do
       before(:each) do
         patch :update, {id: @prayer.id,
-              prayer: { title: "" } }
+              prayer: { prayer: "" } }
       end
 
       it "renders an errors json" do
@@ -103,7 +107,7 @@ describe Api::V1::prayersController do
 
       it "renders the json errors on why the person could not be updated" do
         prayer_response = json_response
-        expect(prayer_response[:errors][:title]).to include "can't be blank"
+        expect(prayer_response[:errors][:prayer]).to include "can't be blank"
       end
 
       it { should respond_with 422 }
@@ -120,42 +124,15 @@ describe Api::V1::prayersController do
 
     it { should respond_with 204 }
   end
-  describe 'get a month' do
-    context 'no prayers' do
-      before(:each) do
-      post :calendar, {
-        prayer: {year: "2015", month:"04", day: "01", type: "month"}}
-      end
-      it 'should have 5 whole weeks' do
-        calendar_response = json_response
-        expect(calendar_response).to have(35).items
-        expect(calendar_response[1][:prayers]).to have(0).items
-      end
-      it { should respond_with 200 }
-    end
 
-    
-  end
 
-  describe 'get a week' do
-    context 'no prayers' do
-      before(:each) do
-      post :calendar, {
-        prayer: {year: "2015", month:"04", day: "01", type: "week"}}
-      end
-      it 'should have 1 whole week' do
-        calendar_response = json_response
-        expect(calendar_response).to have(7).items
-        expect(calendar_response[1][:prayers]).to have(0).items
-      end
-      it { should respond_with 200 }      
-    end
-  
-  end  
+ 
 
   describe 'get a day' do
     context 'no prayers' do
       before(:each) do
+      user = FactoryGirl.create :user
+      api_authorization_header user.auth_token
       post :calendar, {
         prayer: {year: "2015", month:"04", day: "01", type: "day"}}
       end
@@ -168,10 +145,12 @@ describe Api::V1::prayersController do
     end
     context 'with prayers' do
       before(:each) do
-        @prayer1 = FactoryGirl.create :prayer, prayerdate: '2015-04-01' 
-        @prayer2 = FactoryGirl.create :prayer, prayerdate: '2015-04-01'
-        @prayer3 = FactoryGirl.create :prayer, prayerdate: '2015-04-01'
-        @prayer4 = FactoryGirl.create :prayer, prayerdate: '2015-04-08'        
+        user = FactoryGirl.create :user
+      api_authorization_header user.auth_token
+        @prayer1 = FactoryGirl.create :prayer, prayerdate: '2015-04-01', user_id: user[:id]
+        @prayer2 = FactoryGirl.create :prayer, prayerdate: '2015-04-01', user_id: user[:id]
+        @prayer3 = FactoryGirl.create :prayer, prayerdate: '2015-04-01', user_id: user[:id]
+        @prayer4 = FactoryGirl.create :prayer, prayerdate: '2015-04-08', user_id: user[:id]        
       post :calendar, {
         prayer: {year: "2015", month:"04", day: "01", type: "day"}}
       end

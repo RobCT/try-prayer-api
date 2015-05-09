@@ -10,7 +10,7 @@ describe Prayer do
     it { should validate_presence_of :prayerdate}
     it { should validate_presence_of :prayer }
 
-    it { should validate_presence_of :title }
+    
 
     describe ' filter by date range ' do
       before(:each) do

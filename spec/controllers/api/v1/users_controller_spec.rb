@@ -4,6 +4,7 @@ describe Api::V1::UsersController do
  describe "GET #show" do
     before(:each) do
     @user = FactoryGirl.create :user
+    api_authorization_header @user.auth_token
     get :show, id: @user.id
   end
   it "returns the information about a reporter on a hash" do
@@ -31,7 +32,7 @@ end
         expect(user_response[:email]).to eql "newmail@example.com"
       end
 
-      it { should respond_with 200 }
+      it { should respond_with 202 }
     end
 
     context "when is not updated" do
